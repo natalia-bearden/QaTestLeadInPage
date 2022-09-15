@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<!-- @@BANNER@@ -->
+<head>
+    <title>Top Secret - Sample QA RXD Page</title>
+    <style>
+        hr {
+            margin: 15px 0px;
+        }
+    </style>
+    <script>
+        // RXD variable will be undefined if content is not dispatched to an LMS
+        var RXD = window.parent.RXD;
+
+        fireRequests = function () {
+            RXD.SetScore(80, 100, 0);
+            RXD.SetFailed();
+        }
+
+        var audioConstraint = {
+            audio: true
+        };
+
+        var videoConstraint = {
+            video: true
+        };
+
+        requestMicrophone = function () {
+            navigator.mediaDevices.getUserMedia(audioConstraint)
+            .catch(err => { console.error("Error:" + err); return null; });
+
+        }
+        requestCamera = function () {
+            navigator.mediaDevices.getUserMedia(videoConstraint)
+            .catch(err => { console.error("Error:" + err); return null; });
+
+        }
+
+        var displayMediaOptions = {
+            video: {
+                cursor: "always"
+            },
+            audio: false
+        };
+
+        async function requestCapture() {
+            return navigator.mediaDevices.getDisplayMedia(displayMediaOptions)
+            .catch(err => { console.error("Error:" + err); return null; });
+        }
+    </script>
+</head>
+
+<body>
+    <p>
+        This is a piece of sample content served for QA's eyes only...shhh.
+    </p>
+    <br>
+    <p>
+        This button will fire off SetScore and SetFailed. So in CC we should see
+        Score=80, Success=FAIL, and Completion=COMPLETED.
+    </p>
+    <input type="button" value="Fire API Requests" onclick="fireRequests();">
+    <br>
+    <br>
+    <input type="button" value="Request Microphone" onclick="requestMicrophone();">
+    <br>
+    <br>
+    <input type="button" value="Request Camera" onclick="requestCamera();">
+    <br>
+    <br>
+    <input type="button" value="Request Screen Capture" onclick="requestCapture();">
+    <br>
+    <br>
+    <video controls autoplay>
+        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <hr>
+    <input type="button" value="GetStudentId" onclick="alert(RXD.GetStudentID());">
+    <br>
+    <input type="button" value="GetStudentName" onclick="alert(RXD.GetStudentName());">
+    <br>
+    <input type="button" value="GetLessonMode" onclick="alert(RXD.GetLessonMode());">
+    <br>
+    <input type="button" value="SetScore" onclick="RXD.SetScore(80, 100, 0);">
+    <br>
+    <input type="button" value="GetScore (after setting it)" onclick="alert(RXD.GetScore());">
+    <br>
+    <input type="button" value="SetPassed" onclick="RXD.SetPassed();">
+    <br>
+    <input type="button" value="SetFailed" onclick="RXD.SetFailed();">
+    <br>
+    <input type="button" value="SetComplete/ReachedEnd" onclick="RXD.SetReachedEnd();">
+    <br>
+    <input type="button" value="GetStatus (after setting it)" onclick="alert(RXD.GetStatus());">
+    <br>
+    <input type="button" value="SetSuspendData" onclick="RXD.SetSuspendData('test suspend data');">
+    <br>
+    <input type="button" value="GetSuspendData (after setting it)" onclick="alert(RXD.GetSuspendData());">
+    <br>
+    <input type="button" value="SetBookmark" onclick="RXD.SetBookmark('test bookmark');">
+    <br>
+    <input type="button" value="GetBookmark (after setting it)" onclick="alert(RXD.GetBookmark());">
+    <hr>
+    <input type="button" value="Record True False Interaction - 1" onclick="RXD.RecordTrueFalseInteraction('tf_123', true, true, true, 'true/false interaction description', 1, 1, 'lo_123');">
+    <br>
+    <input type="button" value="Record True False Interaction - 2" onclick="RXD.RecordTrueFalseInteraction('tf_456', false, false, true, 'true/false interaction description 2', 1, 1, 'lo_123');">
+    <br>
+    <input type="button" value="Record Multiple Choice Interaction" onclick="RXD.RecordMultipleChoiceInteraction('mc_123', 'a', true, 'a', 'multiple choice interaction description', 1, 1, 'lo_123');">
+    <br>
+    <input type="button" value="Record FillIn Interaction" onclick="RXD.RecordFillInInteraction('abc125', 'correct-response', true, 'correct-response', 'fill In Description', 1, 0, 'strLearningObjectiveID');">
+    <br>
+    <input type="button" value="Record Matching Interaction" onclick="RXD.RecordMatchingInteraction('abc321', {source: 'source1', target: 'target1'}, true, {source: 'source1', target: 'target1'}, 'matching interaction description', 1, 0, 'strLearningObjectiveID');">
+    <br>
+    <input type="button" value="Record Performance Interaction" onclick="RXD.RecordPerformanceInteraction('abc543', 'response', true, 'response', 'performance interaction description', 1, 0, 'strLearningObjectiveID');">
+    <br>
+    <input type="button" value="Record Sequencing Interaction" onclick="RXD.RecordSequencingInteraction('abc654', {short: 'a', long: 'alpha'}, true, {short: 'a', long: 'alpha'}, 'sequencing interaction description', 1, 0, 'strLearningObjectiveID');">
+    <br>
+    <input type="button" value="Record Likert Interaction" onclick="RXD.RecordLikertInteraction('abc087', 'response', true, 'response', 'likert interaction description', 1, 0, 'strLearningObjectiveID');">
+    <br>
+    <input type="button" value="Record Numeric Interaction" onclick="RXD.RecordNumericInteraction('num_123', 1, true, 1, 'numeric interaction description', 1, 1, 'lo_123');">
+    <hr>
+    <p>
+        Determine the Account ID from query parameter.
+    </p>
+    <input type="button" value="Account ID" onclick="alert(new URLSearchParams(window.parent.location.search).get('accountId'));">
+    <hr>
+    <input type="button" value="ConcedeControl (Exit Course)" onclick="RXD.ConcedeControl();">
+</body>
+</html>
