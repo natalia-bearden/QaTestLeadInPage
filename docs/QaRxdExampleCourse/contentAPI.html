@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html style="width: 100%; height: 99%;">
+
+<!-- Copyright 2003-2019 Rustici Software, LLC All Rights Reserved. Rustici-Cross-Domain 3.4.0 2022-08-26T00:19:13+0000 d5b4d65f0180018f03baf57d2ef0827cdcbfdcb5 -->
+<head>
+    <script src="//qa-3-3.contentcontroller.net/rxd/rustici-xd-pkg-api.min.js?d5b4d65f0180018f03baf57d2ef0827cdcbfdcb5"></script>
+    <script>
+        function getQueryStringValue (strElement, strQueryString) {
+            var aryPairs,
+                i,
+                intEqualPos,
+                strArg = "",
+                strValue = "";
+
+            // get rid of the leading "?"
+            strQueryString = strQueryString.substring(1);
+
+            // split into name/value pairs
+            aryPairs = strQueryString.split("&");
+
+            strElement = strElement.toLowerCase();
+
+            // search each querystring value and return the first match
+            for (i = 0; i < aryPairs.length; i += 1) {
+                intEqualPos = aryPairs[i].indexOf("=");
+
+                if (intEqualPos !== -1) {
+                    strArg = aryPairs[i].substring(0, intEqualPos);
+
+                    if (strArg.toLowerCase() === strElement.toLowerCase()) {
+                        strValue = aryPairs[i].substring(intEqualPos + 1);
+
+                        strValue = strValue.replace(/\+/g, "%20");
+                        strValue = decodeURIComponent(strValue);
+
+                        return strValue;
+                    }
+                }
+            }
+
+            // if we didn't find a match, return an empty string
+            return "";
+        }
+
+        function loadFrames () {
+            var startPath = getQueryStringValue("contentUrl", document.location.search);
+
+            //
+            // This frame goes to the actual real content, that content should access
+            // the RXD API via `window.parent`
+            //
+            document.getElementById("contentRelay").setAttribute("src", startPath);
+
+            RXD.Initialize();
+        }
+    </script>
+</head>
+
+<body onload="loadFrames()" style="width: 100%; height: 100%; margin: 0px;">
+    <iframe id="contentRelay" style="width: 100%; height: 100%; border: 0px;" mozallowfullscreen webkitallowfullscreen allowfullscreen allow="autoplay; camera; display-capture; fullscreen; microphone"></iframe>
+</body>
+</html>
